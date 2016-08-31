@@ -23,8 +23,13 @@ public class conectionBD {
     
     private Connection connection = null;
     private Statement statement = null;
+    private Statement statementByID = null;
+    private Statement statementGeneric = null;
+    private Statement statementCheck = null;
+    private Statement statementLast = null;
+    private Statement statementNext = null;
+    private Statement statementDelete = null;
     private ResultSet rs = null;
-    private ResultSet rsView = null;
     private int numberOfRows;  
     private int lastContact;
     
@@ -49,6 +54,8 @@ public class conectionBD {
                     "    \"address\" TEXT NOT NULL,\n" +
                     "    \"country\" TEXT NOT NULL\n" +
                     ")");
+            connection.commit();
+            connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,6 +68,8 @@ public class conectionBD {
         System.out.println("THE SQL IS "+sql);
         try {
             statement.executeUpdate(sql);
+            connection.commit();
+            connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -69,10 +78,10 @@ public class conectionBD {
     public int checkDataBase(){         
         try {
             //PROBANDO AKI
-            statement = connection.createStatement();
+            statementCheck = connection.createStatement();
             //PROBANDO AKI
             
-            rs = statement.executeQuery("select count(*) FROM contacts");
+            rs = statementCheck.executeQuery("SELECT COUNT(*) FROM contacts");
             if(rs.getString(1).equals(""+0)){                
                 numberOfRows = 1;
             }else{
@@ -84,9 +93,32 @@ public class conectionBD {
         return numberOfRows;
     }
     
+    public ResultSet queryNextRegister(int id){    
+        try {
+            statementNext = connection.createStatement();
+            String sql = "SELECT * FROM contacts WHERE id > " + id + " LIMIT 1;";                     
+            rs = statementNext.executeQuery(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;    
+    }
+    
+    public ResultSet queryPreviousRegister(int id){
+        try {
+            statementNext = connection.createStatement();
+            String sql = "SELECT * FROM contacts WHERE id < " + id + " LIMIT 1;";                     
+            rs = statementNext.executeQuery(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    
+    
     public int selectLastContact (){
         try {
-            rs = statement.executeQuery("SELECT * FROM contacts ORDER BY id DESC LIMIT 1;");
+            rs = statementLast.executeQuery("SELECT * FROM contacts ORDER BY id DESC LIMIT 1;");
             lastContact=Integer.parseInt(rs.getString("id"));
         } catch (SQLException ex) {
             Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +130,7 @@ public class conectionBD {
     
     public ResultSet genericQuery(){
         try {
-            rs = statement.executeQuery("SELECT * FROM contacts");
+            rs = statementGeneric.executeQuery("SELECT * FROM contacts");
         } catch (SQLException ex) {
             Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,8 +138,10 @@ public class conectionBD {
     }
     
     public ResultSet queryById(int id){
+        
         try {
-            rs = statement.executeQuery("SELECT * FROM contacts WHERE ID ="+id);
+            statementByID = connection.createStatement();
+            rs = statementByID.executeQuery("SELECT * FROM contacts WHERE ID ="+id);
         } catch (SQLException ex) {
             Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,8 +161,10 @@ public class conectionBD {
     public void delete(int id){
         String sql = "DELETE FROM contacts WHERE ID = " + id + ";";
         try {
-            statement.executeUpdate(sql);
+            statementDelete = connection.createStatement();
+            statementDelete.executeUpdate(sql);
             connection.commit();
+            connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
         }

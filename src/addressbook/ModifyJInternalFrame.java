@@ -34,16 +34,19 @@ public class ModifyJInternalFrame extends javax.swing.JInternalFrame {
         connectionBD = new conectionBD();
         rs = connectionBD.queryById(count);
         prepareLabels(pass);
+        
         completeInfo();
         limitContacts = connectionBD.checkDataBase();
-        limitContacts--;
+        
         if(limitContacts==0){
             JOptionPane.showMessageDialog(null, "The DataBase is empty, please insert a new register");
             dispose();
         }
-        System.out.println("THE LIMIT OF THE CONTACTS IS: "+limitContacts);
+        System.out.println("THE LIMIT OF THE CONTACTS IS: "+limitContacts);        
     }
     
+    
+       
     private void prepareLabels(boolean pass){        
         nameJtext.setEnabled(pass);
         surnameJtext.setEnabled(pass);
@@ -308,42 +311,38 @@ public class ModifyJInternalFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_modifyJbuttonActionPerformed
 
     private void nextJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextJbuttonActionPerformed
-        //limitContacts = connectionBD.checkDataBase(); 
-        if(count==limitContacts){
+        limitContacts = connectionBD.checkDataBase();
+        if(Integer.parseInt(idJtext.getText())==limitContacts){
             JOptionPane.showMessageDialog(null, "This is the last contact");
         }else{
-            count++;
-            rs = connectionBD.queryById(count);
+            rs = connectionBD.queryNextRegister(Integer.parseInt(idJtext.getText()));
             completeInfo();
-        }
+        }       
     }//GEN-LAST:event_nextJbuttonActionPerformed
 
     private void previousJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousJbuttonActionPerformed
-        if(count==1){
+        if(Integer.parseInt(idJtext.getText())==1){
             JOptionPane.showMessageDialog(null, "This is the first contact");
-        }else{
-            count--;
-            rs = connectionBD.queryById(count);
+        }else{            
+            rs = connectionBD.queryPreviousRegister(Integer.parseInt(idJtext.getText()));
             completeInfo();
         }
     }//GEN-LAST:event_previousJbuttonActionPerformed
 
     private void firstJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstJbuttonActionPerformed
-        if(count == 1){
+        if(Integer.parseInt(idJtext.getText())==1){
             JOptionPane.showMessageDialog(null, "This is the first contact");
-        }else{
-            count = 1;
-            rs = connectionBD.queryById(count);
+        }else{            
+            rs = connectionBD.queryById(1);
             completeInfo();
         }
     }//GEN-LAST:event_firstJbuttonActionPerformed
 
     private void lastJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastJbuttonActionPerformed
-        if(count==limitContacts){
+        if(Integer.parseInt(idJtext.getText())==limitContacts){
             JOptionPane.showMessageDialog(null, "This is the last contact");
-        }else{
-            count++;
-            rs = connectionBD.queryById(count);
+        }else{            
+            rs = connectionBD.queryById(limitContacts);
             completeInfo();
         }
     }//GEN-LAST:event_lastJbuttonActionPerformed
@@ -363,7 +362,8 @@ public class ModifyJInternalFrame extends javax.swing.JInternalFrame {
 
     private void deleteJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJbuttonActionPerformed
         connectionBD.delete(Integer.parseInt(idJtext.getText()));
-        previousJbuttonActionPerformed(evt);
+        rs=connectionBD.genericQuery();
+        completeInfo();
     }//GEN-LAST:event_deleteJbuttonActionPerformed
 
 

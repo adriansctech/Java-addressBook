@@ -27,7 +27,8 @@ public class NewJInternalFrame extends javax.swing.JInternalFrame {
     public NewJInternalFrame() {
         initComponents();
         connectionBD = new conectionBD();
-        idJtextField.setText(""+(connectionBD.selectLastContact()+1));
+        //idJtextField.setText(""+(connectionBD.selectLastContact()));
+        checkDataBase();
     }
     
     private void checkDataBase(){
@@ -203,7 +204,8 @@ public class NewJInternalFrame extends javax.swing.JInternalFrame {
 
     private void agreeJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agreeJbuttonActionPerformed
         checkFields();
-        insertNewRow();        
+        insertNewRow();   
+        dispose();
     }//GEN-LAST:event_agreeJbuttonActionPerformed
 
     private void cancelJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJbuttonActionPerformed
