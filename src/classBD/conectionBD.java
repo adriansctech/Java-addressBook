@@ -25,7 +25,8 @@ public class conectionBD {
     private Statement statement = null;
     private ResultSet rs = null;
     private ResultSet rsView = null;
-    private int numberOfRows;    
+    private int numberOfRows;  
+    private int lastContact;
     
     //Constructor
     public conectionBD(){        
@@ -55,16 +56,10 @@ public class conectionBD {
     
     public void insertNewContact(int id, String name, String surname, String address, String country){
         
-        String sql = "INSERT INTO contacts (id, name,surname, address, country) "
+        String sql = "INSERT INTO contacts (id,name,surname,address,country) "
                     + "VALUES ("+id+", '" + name + "', '" + surname + "', '" + address + "', '" + country +"');";
-        
+        System.out.println("THE SQL IS "+sql);
         try {
-            
-            
-            //PROBANDO AKI
-            statement = connection.createStatement();
-            //PROBANDO AKI
-            
             statement.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,6 +84,16 @@ public class conectionBD {
         return numberOfRows;
     }
     
+    public int selectLastContact (){
+        try {
+            rs = statement.executeQuery("SELECT * FROM contacts ORDER BY id DESC LIMIT 1;");
+            lastContact=Integer.parseInt(rs.getString("id"));
+        } catch (SQLException ex) {
+            Logger.getLogger(conectionBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("LAST CONTACT IS "+lastContact);
+        return lastContact;
+    }
     
     
     public ResultSet genericQuery(){

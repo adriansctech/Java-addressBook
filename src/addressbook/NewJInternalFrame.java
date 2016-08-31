@@ -27,7 +27,7 @@ public class NewJInternalFrame extends javax.swing.JInternalFrame {
     public NewJInternalFrame() {
         initComponents();
         connectionBD = new conectionBD();
-        idJtextField.setText(""+connectionBD.checkDataBase());
+        idJtextField.setText(""+(connectionBD.selectLastContact()+1));
     }
     
     private void checkDataBase(){
@@ -36,7 +36,7 @@ public class NewJInternalFrame extends javax.swing.JInternalFrame {
     
     
     
-    private void insertNewRow(){
+    private void insertNewRow(){        
         connectionBD.insertNewContact(Integer.parseInt(idJtextField.getText()), 
                                         nameJtextField.getText(), 
                                         surnameJtextFIeld.getText(), 
@@ -203,12 +203,7 @@ public class NewJInternalFrame extends javax.swing.JInternalFrame {
 
     private void agreeJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agreeJbuttonActionPerformed
         checkFields();
-        insertNewRow();
-        try {
-            this.setClosed(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(NewJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        insertNewRow();        
     }//GEN-LAST:event_agreeJbuttonActionPerformed
 
     private void cancelJbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJbuttonActionPerformed
